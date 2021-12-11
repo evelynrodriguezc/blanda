@@ -17,7 +17,10 @@ class minner():
     def search(self):
         self.client.get_news(self.topic)
         raw_news = self.client.result()
-        for n in raw_news:
+        i = 0
+        m = 150
+        while i <= m:
+            n = raw_news[i]
             destination = requests.get(f"https://{n['link']}").url
             print(destination)
             metadata = self.get_link_info(destination)
@@ -34,6 +37,7 @@ class minner():
             cleaned_metadata["topic"] = self.topic
             aux_new = new(**cleaned_metadata)
             self.news.append(aux_new)
+            i += 1
 
     def get_link_info(self,link):
         aux = link.split("/")[3:]
