@@ -1,17 +1,18 @@
 from summa.summarizer import summarize
-
+import importlib
 class new():
     def __init__(self,title=None,link=None,newspaper=None,date=None,topic=None,subtopics=None):
         self.topic = topic
         self.title = title
         self.link = link
-        self.newspaper = newspaper
+        self.newspaper = "".join(newspaper.lower().split(" "))
         self.date = date
         self.sub_topic = subtopics
-    
-    @staticmethod
-    def make_sumary(texto:str)->str:
-        print(summarize(texto,language="spanish"))
+        self.scraper = importlib.import_module(f"scrapers.{self.newspaper}")
+        self.text = self.scraper.procesar(self.link)["contenido"]
+        
+    def make_sumary(self)->str:
+        return summarize(self.text,language="spanish")
 
 #a = new()
 #resumen = a.make_sumary('''Cuando Frank Esteban Gómez Arias se dirigía hacia Girardota, donde trabajaba como operario en una empresa textil, fue asesinado.

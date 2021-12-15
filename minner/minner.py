@@ -20,9 +20,12 @@ class minner():
         i = 0
         m = 150
         while i <= m:
-            n = raw_news[i]
+            print(i)
+            try:
+                n = raw_news[i]
+            except IndexError:
+                break
             destination = requests.get(f"https://{n['link']}").url
-            print(destination)
             metadata = self.get_link_info(destination)
             cleaned_metadata = {}
             if metadata != []:
@@ -35,9 +38,13 @@ class minner():
             cleaned_metadata["title"] = n["title"]
             cleaned_metadata["newspaper"] = n["site"]
             cleaned_metadata["topic"] = self.topic
-            aux_new = new(**cleaned_metadata)
-            self.news.append(aux_new)
-            i += 1
+            try:
+                aux_new = new(**cleaned_metadata)
+                self.news.append(aux_new)
+            except ModuleNotFoundError:
+                print(f"falta el periodico {cleaned_metadata['newspaper']}")
+            finally:
+                i += 1
 
     def get_link_info(self,link):
         aux = link.split("/")[3:]
@@ -87,5 +94,5 @@ print("busqueda inicial")
 a.search()
 print("extras")
 for n in a.news:
-    print(n.link)
-    print(n.sub_topic)
+    print(n.link,n.sub_topic)
+    print(n.make_sumary())
